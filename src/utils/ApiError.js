@@ -3,7 +3,7 @@ class ApiError extends Error{
         statusCode,
         message= "Error occur in api: ",
         errors=[],
-        statck = ""
+        stack = ""
 
     ){
         super(message) 
@@ -13,7 +13,7 @@ class ApiError extends Error{
         this.success= false;
         this.errors = errors
         if (stack){
-            this.stack = statck        
+            this.stack = stack        
 
     }else{
         Error.captureStackTrace(this,this.
@@ -23,4 +23,4 @@ class ApiError extends Error{
 
 }
 }
-eport {ApiError}
+export {ApiError}
