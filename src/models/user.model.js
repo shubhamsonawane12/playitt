@@ -52,18 +52,36 @@ const userSchema = new Schema({
 },{timestamp:true});
 
 
-userSchema.pre('save',async function (next){
+// userSchema.pre('save',async function (next){
 
-    if(this.isModified("password")) return next();
-    this.password = await bcrypt.hash(this.password,10)
-    next()
-})
+//     if(this.isModified("password")) return next();
+//     this.password = await bcrypt.hash(this.password,10)
+//     next()
+//     console.log("Hashed Password in Database:", user.password);
+// console.log("Entered Password:", password);
+
+// })
+
+userSchema.pre('save', async function (next) {
+    // Only hash the password if it has been modified (or is new)
+    if (!this.isModified("password")) return next();
+
+    // Hash the password
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+
+
+});
+
+       
+
 userSchema.methods.isPasswordCorrect = async function 
-(passowrd){
-   return await bcrypt.compare(passowrd,this.passowrd )
+(password){
+    
+   return await bcrypt.compare(password,this.password )
 }
 userSchema.methods.genrateAcessToken = function(){
-    jwt.sign({
+ return   jwt.sign({
         _id: this._id,
         email:this.email, 
         fullName:this.fullName
@@ -74,7 +92,7 @@ userSchema.methods.genrateAcessToken = function(){
     })
 }
 userSchema.methods.genrateRefreshToken = function(){
-     jwt.sign({
+   return  jwt.sign({
         _id: this._id,
       
     },
